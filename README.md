@@ -86,11 +86,34 @@ You can find an example of usage in this [notebook](https://github.com/ffe-munic
 
 - [ ] Interface to give an area overlapping different wms services
 - [ ] Command Line Interface
-- [ ] Integrate all WMS in germany
-    - [x] Bavaria
-    - [x] Baden‑Württemberg
+- [x] Integrate all WMS in germany
+- [x] RGBI Download
 
 See the [open issues](https://github.com/ffe-munich/orthophotos-downloader/issues) for a full list of proposed features (and known issues).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Coverage in Germany by Federal State (Bundesländer)
+
+| Bundesland             | RGB | CIR |
+|------------------------|:---:|:---:|
+| Saarland               | ✅  | ✅  |
+| Mecklenburg-Vorpommern | ✅  | ✅  |
+| Rheinland-Pfalz        | ✅  | ✅  |
+| Sachsen                | ✅  | ✅  |
+| Thüringen              | ✅  | ✅  |
+| Sachsen-Anhalt         | ✅  |     |
+| Nordrhein-Westfalen    | ✅  | ✅  |
+| Hessen                 | ✅  | ✅  |
+| Hamburg                | ✅  | ✅  |
+| Bremen                 | ✅  |     |
+| Brandenburg            | ✅  | ✅  |
+| Niedersachsen          | ✅  |     |
+| Schleswig-Holstein     | ✅  |     |
+| Bayern                 | ✅  | ✅  |
+
+
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
