@@ -4,6 +4,7 @@ import numpy as np
 import rasterio
 import json
 from numbers import Number
+from concurrent.futures import ThreadPoolExecutor
 
 from dataclasses import dataclass
 from decimal import Decimal
@@ -177,6 +178,7 @@ class ExtendedWebMapService:
         self.layer_name: str = layer_name
         self.crs: str = crs  # EPSG format
         self.format: str = format
+        self.bounding_box = None  # Initialize bounding_box attribute
 
     def getmap(self, bbox, size) -> ResponseWrapper:
         """
@@ -357,6 +359,9 @@ class ImageDownloader:
             images are not stored to disk and they are included in the AreaDataset as Image instances with empty paths.
         """
 
+        # Ensure out_path is a Path object
+        if not isinstance(out_path, Path):
+            out_path = Path(out_path)
         # get the grid of tiles that have to be downloaded
         grid = self._prepare_image_download(area_polygon, out_path, buffer_size, mask)
 
@@ -619,3 +624,137 @@ class ImageDownloader:
         r = {k: v if isinstance(v, Number) else str(v) for k, v in self.__dict__.items()}
         r["wms"] = self.wms.to_dict()
         return r
+
+
+class CentralWMSManager:
+    """
+    A central class to manage WMS services and handle AOI-based downloads.
+    """
+
+    def __init__(self, wms_metadata: List[dict]):
+        """
+        Initialize the CentralWMSManager with metadata for available WMS services.
+
+        Args:
+            wms_metadata: A list of dictionaries containing metadata for WMS services.
+                          Each dictionary should include keys like 'url', 'version',
+                          'resolution', 'layer_name', 'crs', 'format', and 'bounding_box'.
+        """
+        self.wms_metadata = wms_metadata
+        self.downloaders = []
+
+    def select_services_for_aoi(self, area_polygon: GeoSeries):
+        """
+        Automatically select the appropriate WMS services for the given AOI.
+
+        Args:
+            area_polygon: The polygon representing the area of interest.
+
+        Returns:
+            List[ImageDownloader]: A list of instantiated ImageDownloader objects.
+        """
+        selected_downloaders = []
+        for metadata in self.wms_metadata:
+            bounding_box = Polygon.from_bounds(*metadata['bounding_box'])
+            if area_polygon.intersects(bounding_box).any():
+                wms = ExtendedWebMapService(
+                    url=metadata['url'],
+                    version=metadata['version'],
+                    resolution=metadata['resolution'],
+                    layer_name=metadata['layer_name'],
+                    crs=metadata['crs'],
+                    format=metadata['format'],
+                )
+                wms.bounding_box = metadata['bounding_box']
+                selected_downloaders.append(ImageDownloader(wms=wms, grid_spacing=metadata['resolution']))
+        return selected_downloaders
+
+    def preview_aoi(self, area_polygon: GeoSeries):
+        """
+        Provide a pre-download preview of the requested AOI.
+
+        Args:
+            area_polygon: The polygon representing the area of interest.
+
+        Returns:
+            dict: A dictionary containing estimated tile count, total data size, coverage diagnostics,
+                  and an overview image for visual validation.
+        """
+        # Placeholder implementation for preview functionality
+        return {
+            "estimated_tile_count": 0,
+            "total_data_size": "0 MB",
+            "coverage_diagnostics": "No diagnostics available",
+            "overview_image": None,
+        }
+
+    def download_aoi(self, area_polygon: GeoSeries, out_path: str):
+        """
+        Download all tiles for the given AOI using the appropriate WMS services.
+
+        Args:
+            area_polygon: The polygon representing the area of interest.
+            out_path: The output path for the downloaded images.
+        """
+        # Select the appropriate services
+        self.downloaders = self.select_services_for_aoi(area_polygon)
+
+        # Use ThreadPoolExecutor for parallel downloads
+        with ThreadPoolExecutor() as executor:
+            futures = []
+            for downloader in self.downloaders:
+                bounding_box = Polygon.from_bounds(*downloader.wms.bounding_box)
+                if area_polygon.intersects(bounding_box).any():
+                    sub_area = area_polygon.intersection(bounding_box)
+                    if not sub_area.is_empty.any():
+                        sub_area = sub_area[sub_area.is_valid]
+                        futures.append(
+                            executor.submit(
+                                downloader.download_images_from_polygon,
+                                area_name="SubArea",
+                                area_polygon=sub_area,
+                                out_path=out_path,
+                            )
+                        )
+
+            # Wait for all downloads to complete
+            for future in futures:
+                future.result()
+
+class MultiServiceDownloader:
+    """
+    A class to manage multiple WMS services and download images for a given area.
+    """
+    def __init__(self, wms_metadata: list):
+        self.wms_metadata = wms_metadata
+        self.downloaders = []
+
+    def download_images_for_area(self, area_polygon, out_path):
+        """
+        Instantiate downloaders for all WMS services whose bounding box intersects the area_polygon
+        and trigger their download_images_from_polygon method.
+        """
+        self.downloaders = []
+        for metadata in self.wms_metadata:
+            bounding_box = Polygon.from_bounds(*metadata['bounding_box'])
+            if area_polygon.intersects(bounding_box).any():
+                wms = ExtendedWebMapService(
+                    url=metadata['url'],
+                    version=metadata['version'],
+                    resolution=metadata['resolution'],
+                    layer_name=metadata['layer_name'],
+                    crs=metadata['crs'],
+                    format=metadata['format'],
+                )
+                wms.bounding_box = metadata['bounding_box']
+                downloader = ImageDownloader(wms=wms, grid_spacing=metadata['resolution'])
+                self.downloaders.append(downloader)
+                # Download images for the intersection area
+                sub_area = area_polygon.intersection(bounding_box)
+                if not sub_area.is_empty.any():
+                    sub_area = sub_area[sub_area.is_valid]
+                    downloader.download_images_from_polygon(
+                        area_name="SubArea",
+                        area_polygon=sub_area,
+                        out_path=out_path,
+                    )

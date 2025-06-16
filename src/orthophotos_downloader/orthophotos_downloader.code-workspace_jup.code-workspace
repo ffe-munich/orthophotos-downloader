@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"name": "orthophotos_downloader",
+			"path": "."
+		},
+		{
+			"path": "../../../../../tmp/test_output_ulm"
+		}
+	],
+	"settings": {}
+}
