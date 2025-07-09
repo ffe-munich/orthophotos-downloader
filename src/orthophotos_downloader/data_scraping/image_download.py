@@ -16,6 +16,7 @@ from pathlib import Path
 from rasterio.features import rasterize
 from rasterio.transform import from_origin
 from shapely.geometry import Polygon, mapping, shape
+from tenacity import retry, stop_after_attempt, wait_fixed, before_sleep_log
 from time import perf_counter
 from typing import List, Optional
 
@@ -413,6 +414,12 @@ class ImageDownloader:
         return result_obj
 
     @staticmethod
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_fixed(10),
+        before_sleep=before_sleep_log(logger, logging.WARNING),
+        reraise=True,
+    )
     def download_single_image(
         img_path: Path,
         bounding_box: Polygon,
