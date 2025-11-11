@@ -593,9 +593,9 @@ class ImageDownloader:
         x_coords = list(np.arange(np.floor(minx), np.ceil(maxx), grid_spacing))
         y_coords = list(np.arange(np.floor(miny), np.ceil(maxy), grid_spacing))
 
-        # round to even thousands to match the grid
-        x_coords = [round(x, -3) for x in x_coords]
-        y_coords = [round(y, -3) for y in y_coords]
+        # snap the points to the grid, whichs cell size is defined by grid_spacing
+        x_coords = [round(x / grid_spacing) * grid_spacing for x in x_coords]
+        y_coords = [round(y / grid_spacing) * grid_spacing for y in y_coords]
 
         # ensure to cover the whole area by expanding the grid by one grid_spacing in each direction
         x_coords = [x_coords[0] - grid_spacing] + x_coords + [x_coords[-1] + grid_spacing]
