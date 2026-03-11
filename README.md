@@ -76,7 +76,8 @@ With this software, we offer a central, user-friendly solution that allows users
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-You can find an example of usage in this [notebook](https://github.com/ffe-munich/orthophotos-downloader/examples/demo_bavaria_download.ipynb) in the examples folder
+You can find an example of usage in this [notebook](https://github.com/ffe-munich/orthophotos-downloader/examples/demo_download.ipynb) in the examples folder
+You can find a test to download in any Bundesländer in [this script](https://github.com/ffe-munich/orthophotos-downloader/examples/download_test.py) in the examples folder
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

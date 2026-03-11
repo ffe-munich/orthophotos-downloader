@@ -42,5 +42,5 @@ dev = [
     "jupyter>=1.1.1",
     "black",
     "flake8",
-    "pytest"
+    "pytest",
 ]

@@ -66,9 +66,7 @@ class Image:
 
     def to_dict(self) -> dict:
         """Return a serializable dictionary representation of the Image object."""
-        return {
-            k: v if isinstance(v, Number) else str(v) for k, v in self.__dict__.items()
-        }
+        return {k: v if isinstance(v, Number) else str(v) for k, v in self.__dict__.items()}
 
 
 @dataclass
@@ -127,9 +125,7 @@ class AreaDataset:
 
         # if necessary, convert dict-dump of Image instances back to Image
         if self.images is not None:
-            self.images = [
-                Image(**i) if isinstance(i, dict) else i for i in self.images
-            ]
+            self.images = [Image(**i) if isinstance(i, dict) else i for i in self.images]
 
         # try to read the polygon from disk if it is not a Polygon object already
         if not isinstance(self.polygon, Polygon):
@@ -213,9 +209,7 @@ class ExtendedWebMapService:
 
     def to_dict(self) -> dict:
         """Return a serializable dictionary representation of the object."""
-        r = {
-            k: v if isinstance(v, Number) else str(v) for k, v in self.__dict__.items()
-        }
+        r = {k: v if isinstance(v, Number) else str(v) for k, v in self.__dict__.items()}
         r["url"], r["version"] = self.wms.url, self.wms.version
         del r["wms"]
         return r
@@ -280,9 +274,7 @@ class ImageDownloader:
 
         # make sure it is is a GeoSeries
         if not isinstance(geoseries, GeoSeries):
-            logger.error(
-                f"Expected GeoSeries for argument '{argname}', but got {type(geoseries)}."
-            )
+            logger.error(f"Expected GeoSeries for argument '{argname}', but got {type(geoseries)}.")
             raise ValueError(f"Expected GeoSeries for '{argname}'.")
 
         # make sure the GeoSeries only contains one polygon
@@ -290,9 +282,7 @@ class ImageDownloader:
             logger.error(
                 f"Expected GeoSeries of length 1 for argument '{argname}', but got GeoSeries of length {geoseries.length}."
             )
-            raise ValueError(
-                f"Expected GeoSeries of length 1 for argument '{argname}'."
-            )
+            raise ValueError(f"Expected GeoSeries of length 1 for argument '{argname}'.")
 
         # make sure the CRS of the GeoSeries matches the CRS of the WMS
         if not ":".join(geoseries.geometry.crs.to_authority()) == self.wms.crs:
@@ -342,9 +332,7 @@ class ImageDownloader:
             len_before = len(grid)
             grid = grid.loc[grid.intersects(mask.iloc[0])]
             logger.info(f"Total images: {len_before}")
-            logger.info(
-                f"Filtered images (using the provided mask): {len_before - len(grid)}"
-            )
+            logger.info(f"Filtered images (using the provided mask): {len_before - len(grid)}")
             logger.info(f"Images to process: {len(grid)}")
 
         # create the output directory for the images
@@ -425,9 +413,7 @@ class ImageDownloader:
             # when the image download fails, create an empty image instance to prevent the loop from breaking
             # because of a single failed image download
             except Exception as e:
-                logger.error(
-                    f"Error downloading image {i+1}. Append empty image to images list..."
-                )
+                logger.error(f"Error downloading image {i+1}. Append empty image to images list...")
                 logger.exception(e)
                 images.append(
                     Image(
@@ -545,9 +531,7 @@ class ImageDownloader:
         )
         result = response.read()
         img = io.imread(result, index=None)[:, :, :3]
-        mask_path = (
-            img_path.with_stem(f"{img_path.stem}_mask") if mask is not None else None
-        )
+        mask_path = img_path.with_stem(f"{img_path.stem}_mask") if mask is not None else None
         upper_left_x = bounding_box.bounds[0]
         upper_left_y = bounding_box.bounds[3]
         metadata = {
@@ -558,9 +542,7 @@ class ImageDownloader:
             "height": height_px,
             "count": 3,
             "crs": rasterio.crs.CRS.from_string(wms.crs),
-            "transform": from_origin(
-                upper_left_x, upper_left_y, wms.resolution, wms.resolution
-            ),
+            "transform": from_origin(upper_left_x, upper_left_y, wms.resolution, wms.resolution),
         }
         with rasterio.open(img_path, "w", **metadata) as dst:
             dst.write(img.transpose((2, 0, 1)))
@@ -653,7 +635,7 @@ class ImageDownloader:
                 sub_height = min(max_tile_size_px, height_px - row * max_tile_size_px)
 
                 subtile_path = img_path.parent / f"{img_path.stem}_sub_{row}_{col}.tiff"
-                sub_image = ImageDownloader._download_tile(
+                ImageDownloader._download_tile(
                     img_path=subtile_path,
                     bounding_box=sub_bbox,
                     wms=wms,
@@ -726,15 +708,11 @@ class ImageDownloader:
 
         # check if dir_path is emtpy
         if not list(dir_path.iterdir()):
-            logger.warning(
-                f"Path '{dir_path}' passed to delete_images() is already empty."
-            )
+            logger.warning(f"Path '{dir_path}' passed to delete_images() is already empty.")
 
         # check if dir_path contains files other than images
         if any([f.suffix not in [".png", ".tiff"] for f in dir_path.iterdir()]):
-            logger.error(
-                f"Path '{dir_path}' passed to delete_images() contains not only images."
-            )
+            logger.error(f"Path '{dir_path}' passed to delete_images() contains not only images.")
             return False
 
         try:
@@ -753,9 +731,7 @@ class ImageDownloader:
     @staticmethod
     def _make_grid(
         area_polygon: Polygon, buffer_size: int, grid_spacing: int
-    ) -> (
-        GeoDataFrame
-    ):  # TODO this function does not generates well to any other coordinate system
+    ) -> GeoDataFrame:  # TODO this function does not generates well to any other coordinate system
         """
         Creates a grid of squares that fully covers the specified area of interest and is alligned with utm coordinate system.
 
@@ -798,9 +774,7 @@ class ImageDownloader:
 
     def to_dict(self) -> dict:
         """Return a serializable dictionary representation of the ImageDownloader object."""
-        r = {
-            k: v if isinstance(v, Number) else str(v) for k, v in self.__dict__.items()
-        }
+        r = {k: v if isinstance(v, Number) else str(v) for k, v in self.__dict__.items()}
         r["wms"] = self.wms.to_dict()
         return r
 
@@ -842,9 +816,7 @@ class RGBIImageDownloader:
     into a 4-band (RGBI) GeoTIFF.
     """
 
-    def __init__(
-        self, rgb_downloader: ImageDownloader, cir_downloader: ImageDownloader
-    ):
+    def __init__(self, rgb_downloader: ImageDownloader, cir_downloader: ImageDownloader):
         """
         Initializes the RGBIImageDownloader with separate RGB and CIR downloaders.
 
@@ -912,7 +884,7 @@ class RGBIImageDownloader:
 
             try:
                 # Download RGB tile
-                rgb_img = self.rgb_downloader.download_single_image(
+                self.rgb_downloader.download_single_image(
                     img_path=rgb_path,
                     bounding_box=tile.geometry,
                     wms=self.rgb_downloader.wms,
@@ -923,7 +895,7 @@ class RGBIImageDownloader:
                 )
 
                 # Download CIR tile
-                cir_img = self.cir_downloader.download_single_image(
+                self.cir_downloader.download_single_image(
                     img_path=cir_path,
                     bounding_box=tile.geometry,
                     wms=self.cir_downloader.wms,
