@@ -29,7 +29,7 @@ def random_tile_within(poly, size=100, buffer=500, max_tries=1000):
 
 
 # Create base output directory for results
-BASE_PATH = Path("./examples/data/test_rgbi_results")
+BASE_PATH = Path("./test_folder/")
 BASE_PATH.mkdir(exist_ok=True)
 
 # Iterate through each German state and test RGBI image download
