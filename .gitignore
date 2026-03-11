@@ -170,3 +170,9 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Test artifacts
+test-report.html
+test-results.xml
+tests/test_folder/
+.pytest_cache/
