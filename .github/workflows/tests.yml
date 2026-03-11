@@ -14,6 +14,11 @@ jobs:
   test-downloads:
     name: Test WMS Downloads
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
+      checks: write
+      pull-requests: write
     
     steps:
       - name: Checkout code
@@ -33,6 +38,7 @@ jobs:
       - name: Run download tests
         run: |
           uv run pytest tests/ \
+            -n auto \
             --junitxml=test-results.xml \
             --html=test-report.html \
             --self-contained-html \
