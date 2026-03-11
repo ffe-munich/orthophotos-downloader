@@ -77,6 +77,11 @@ def test_state_wms_download(state_info, output_path):
     """Test WMS RGB and CIR downloads for a German state."""
     state_name, state_code, geometry, is_critical = state_info
     
+    print(f"\n{'='*60}")
+    print(f"🔄 Testing: {state_name} ({state_code})")
+    print(f"   Critical state: {'YES 🚨' if is_critical else 'No'}")
+    print(f"{'='*60}")
+    
     # Mark critical tests
     if is_critical:
         pytest.mark.critical
@@ -110,7 +115,9 @@ def test_state_wms_download(state_info, output_path):
         )
         rgb_count = len(rgb_result.images) if rgb_result else 0
         assert rgb_count > 0, f"RGB download produced no images"
+        print(f"   ✅ RGB: {rgb_count} images downloaded")
     except Exception as e:
+        print(f"   ❌ RGB download failed: {e}")
         if is_critical:
             pytest.fail(f"🚨 CRITICAL: RGB download failed for {state_name}: {e}")
         else:
@@ -129,7 +136,9 @@ def test_state_wms_download(state_info, output_path):
         )
         cir_count = len(cir_result.images) if cir_result else 0
         assert cir_count > 0, f"CIR download produced no images"
+        print(f"   ✅ CIR: {cir_count} images downloaded")
     except Exception as e:
+        print(f"   ❌ CIR download failed: {e}")
         if is_critical:
             pytest.fail(f"🚨 CRITICAL: CIR download failed for {state_name}: {e}")
         else:
@@ -143,10 +152,12 @@ def test_state_wms_download(state_info, output_path):
                 area_name=state_name, area_polygon=gdf_tile, out_path=state_path
             )
             rgbi_count = len(rgbi_result.images) if rgbi_result else 0
-            print(f"✅ {state_name}: RGB({rgb_count}), CIR({cir_count}), RGBI({rgbi_count})")
+            print(f"   ✅ RGBI: {rgbi_count} images merged")
+            print(f"\n✅ {state_name}: Complete success!")
         except Exception as e:
             # RGBI merge failure is not critical
-            print(f"⚠️  {state_name}: RGBI merge failed: {e}")
+            print(f"   ⚠️ RGBI merge failed: {e}")
+            print(f"\n🟡 {state_name}: RGB/CIR OK, RGBI merge failed")
 
 
 @pytest.fixture(scope="session", autouse=True)

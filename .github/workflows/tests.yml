@@ -45,6 +45,10 @@ jobs:
             -v
         timeout-minutes: 30
       
+      - name: Generate test summary
+        if: always()
+        run: python .github/scripts/generate_test_summary.py
+      
       - name: Upload test report
         if: always()
         uses: actions/upload-artifact@v4

@@ -26,8 +26,16 @@ jobs:
         run: uv sync --group dev
       
       - name: Run download tests
-        run: uv run pytest tests/ -n auto -v
+        run: |
+          uv run pytest tests/ \
+            -n auto \
+            --junitxml=test-results.xml \
+            -v
         timeout-minutes: 30
+      
+      - name: Generate test summary
+        if: always()
+        run: python .github/scripts/generate_test_summary.py
 
   publish:
     name: Publish to PyPI

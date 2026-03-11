@@ -58,9 +58,9 @@ addopts = [
     "--strict-markers",
     "-ra",
     "--color=yes",
+    "-s",  # Show print output
 ]
 markers = [
     "download: WMS download tests",
     "critical: Critical tests that must pass (Bayern, Baden-Württemberg)",
 ]
-timeout = 1800
