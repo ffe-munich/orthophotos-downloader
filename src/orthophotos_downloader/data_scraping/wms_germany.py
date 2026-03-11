@@ -180,8 +180,8 @@ class BE_RGB_Dop20_ImageDownloader(ImageDownloader):
 
 class BE_CIR_Dop20_ImageDownloader(ImageDownloader):
     """
-    A class for downloading images from the Berlin DOP CIR 20 WMS service.
-    The WMS specifications are automatically set to the Berlin DOPCIR20 service.
+    A class for downloading images from the Brandenburg DOP CIR 20 WMS service.
+    The WMS specifications are automatically set to the Brandenburg DOPCIR20 service.
 
     Attributes:
         grid_spacing: The grid spacing in meters for the image download.

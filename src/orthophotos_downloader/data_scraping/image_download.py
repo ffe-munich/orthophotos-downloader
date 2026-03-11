@@ -768,14 +768,15 @@ class ImageDownloader:
             A GeoDataFrame containing the grid of squares.
         """
 
+        # apply a buffer of on grid_spacing to ensure coverage of edges
         buffered_area = area_polygon.buffer(buffer_size)
+
+        # Get the bounds of the polygon
         minx, miny, maxx, maxy = buffered_area.bounds
 
-        # UTM-basiert aufrunden/abrunden
-        minx = math.floor(minx / grid_spacing) * grid_spacing
-        miny = math.floor(miny / grid_spacing) * grid_spacing
-        maxx = math.ceil(maxx / grid_spacing) * grid_spacing
-        maxy = math.ceil(maxy / grid_spacing) * grid_spacing
+        # Create a grid of points within these bounds
+        x_coords = list(np.arange(np.floor(minx), np.ceil(maxx), grid_spacing))
+        y_coords = list(np.arange(np.floor(miny), np.ceil(maxy), grid_spacing))
 
         # snap the points to the grid, whichs cell size is defined by grid_spacing
         x_coords = [round(x / grid_spacing) * grid_spacing for x in x_coords]
