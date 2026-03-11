@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Generate a markdown summary of test results for GitHub Actions."""
 
+import os
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -123,7 +124,7 @@ def main():
     markdown = generate_markdown_summary(results)
     
     # Write to GitHub Actions summary
-    github_summary = Path(sys.environ.get("GITHUB_STEP_SUMMARY", "summary.md"))
+    github_summary = Path(os.environ.get("GITHUB_STEP_SUMMARY", "summary.md"))
     with open(github_summary, "a") as f:
         f.write(markdown)
     
