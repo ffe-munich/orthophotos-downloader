@@ -407,13 +407,13 @@ class ImageDownloader:
                     )
                 )
                 logger.info(
-                    f"Finished downloading image {i+1} in {perf_counter() - start_time:.2f} seconds.\n"
+                    f"Finished downloading image {i + 1} in {perf_counter() - start_time:.2f} seconds.\n"
                 )
 
             # when the image download fails, create an empty image instance to prevent the loop from breaking
             # because of a single failed image download
             except Exception as e:
-                logger.error(f"Error downloading image {i+1}. Append empty image to images list...")
+                logger.error(f"Error downloading image {i + 1}. Append empty image to images list...")
                 logger.exception(e)
                 images.append(
                     Image(
