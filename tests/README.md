@@ -6,29 +6,31 @@ This directory contains pytest-based tests for the WMS downloaders.
 
 ### Install dependencies
 ```bash
-pip install -e .[dev]
-# or with uv:
+# With uv (recommended):
 uv sync --group dev
+
+# Or with pip:
+pip install -e .[dev]  # Note: May not work with dependency-groups, use uv instead
 ```
 
 ### Run all tests
 ```bash
-pytest tests/
+uv run pytest tests/
 ```
 
 ### Run with verbose output
 ```bash
-pytest tests/ -v
+uv run pytest tests/ -v
 ```
 
 ### Generate HTML report
 ```bash
-pytest tests/ --html=test-report.html --self-contained-html
+uv run pytest tests/ --html=test-report.html --self-contained-html
 ```
 
 ### Run in parallel (faster)
 ```bash
-pytest tests/ -n auto
+uv run pytest tests/ -n auto
 ```
 
 ## Test Structure
