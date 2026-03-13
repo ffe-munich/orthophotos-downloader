@@ -58,14 +58,16 @@ jobs:
             test-report.html
             test-results.xml
           retention-days: 30
+          if-no-files-found: error
       
       - name: Upload test downloads
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-downloads
-          path: tests/test_folder/
+          path: test_folder/
           retention-days: 7
+          if-no-files-found: warn
       
       - name: Publish test results
         if: always()

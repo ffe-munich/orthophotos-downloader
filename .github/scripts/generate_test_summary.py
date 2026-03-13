@@ -123,12 +123,21 @@ def main():
     results = parse_junit_xml(xml_path)
     markdown = generate_markdown_summary(results)
     
-    # Write to GitHub Actions summary
-    github_summary = Path(os.environ.get("GITHUB_STEP_SUMMARY", "summary.md"))
-    with open(github_summary, "a") as f:
-        f.write(markdown)
-    
+    # Print to console
     print(markdown)
+    
+    # Write to GitHub Actions summary
+    summary_file = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary_file:
+        print(f"\n📝 Writing summary to: {summary_file}")
+        try:
+            with open(summary_file, "a", encoding="utf-8") as f:
+                f.write(markdown)
+            print("✅ Summary written successfully")
+        except Exception as e:
+            print(f"⚠️ Failed to write summary: {e}")
+    else:
+        print("⚠️ GITHUB_STEP_SUMMARY not set, skipping GitHub summary")
     
     # Exit with failure if critical states failed
     if results["failed"]:
