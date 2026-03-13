@@ -1,0 +1,77 @@
+name: Download Tests
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+  push:
+    branches:
+      - develop
+      - main
+
+jobs:
+  test-downloads:
+    name: Test WMS Downloads
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
+      checks: write
+      pull-requests: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: uv sync --group dev
+      
+      - name: Run download tests
+        run: |
+          uv run pytest tests/ \
+            -n auto \
+            --junitxml=test-results.xml \
+            --html=test-report.html \
+            --self-contained-html \
+            -v
+        timeout-minutes: 30
+      
+      - name: Generate test summary
+        if: always()
+        run: python .github/scripts/generate_test_summary.py
+      
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: |
+            test-report.html
+            test-results.xml
+          retention-days: 30
+          if-no-files-found: error
+      
+      - name: Upload test downloads
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-downloads
+          path: test_folder/
+          retention-days: 7
+          if-no-files-found: warn
+      
+      - name: Publish test results
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: test-results.xml
+          check_name: WMS Download Test Results
