@@ -9,7 +9,7 @@ authors = [{name = "Daniel Godin", email = "contact@dangodin.com"},
            {name = "Joachim Ferstl", email = "jferstl@ffe.de"},]
 
 description = "Python wrapper for various available WMS services to simplify the download of orthophotos. Currently focused on Germany."
-keywords = ["detection"]
+keywords = ["aerial images", "orthophotos"]
 readme = "README.md"
 
 requires-python = ">=3.11"
@@ -42,5 +42,25 @@ dev = [
     "jupyter>=1.1.1",
     "black",
     "flake8",
-    "pytest",
+    "pytest>=8.0.0",
+    "pytest-xdist>=3.5.0",
+    "pytest-html>=4.1.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-v",
+    "--tb=short",
+    "--strict-markers",
+    "-ra",
+    "--color=yes",
+    "-s",  # Show print output
+]
+markers = [
+    "download: WMS download tests",
+    "critical: Critical tests that must pass (Bayern, Baden-Württemberg)",
 ]
