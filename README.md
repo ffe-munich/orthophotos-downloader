@@ -3,6 +3,9 @@
 
 <h3 align="center">orthophotos-downloader</h3>
 
+[![PyPI version](https://img.shields.io/pypi/v/orthophotos-downloader.svg)](https://pypi.org/project/orthophotos-downloader/)
+[![License](https://img.shields.io/pypi/l/orthophotos-downloader.svg)](https://opensource.org/licenses/MIT)
+
   <p align="center">
     Python wrapper for various available WMS services to simplify the download of orthophotos. Currently focused on Germany.
     <br />
