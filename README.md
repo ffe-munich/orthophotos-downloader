@@ -3,6 +3,9 @@
 
 <h3 align="center">orthophotos-downloader</h3>
 
+[![PyPI version](https://img.shields.io/pypi/v/orthophotos-downloader.svg)](https://pypi.org/project/orthophotos-downloader/)
+[![License](https://img.shields.io/pypi/l/orthophotos-downloader.svg)](https://opensource.org/licenses/MIT)
+
   <p align="center">
     Python wrapper for various available WMS services to simplify the download of orthophotos. Currently focused on Germany.
     <br />
@@ -47,12 +50,19 @@ With this software, we offer a central, user-friendly solution that allows users
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## Installation
 
+To install the [package from PyPi](https://pypi.org/project/orthophotos-downloader/) simply use:
+
+```sh
+pip install orthophotos-downloader
+```
 
 
 <!-- GETTING STARTED -->
-## Getting Started
+## Getting Started for developers
 
+As an alternative to installing the package from PyPi and if want to contribute, develop or just play around, clone the repo and install from there.
 
 1. Clone the repo
    ```sh
@@ -77,7 +87,7 @@ With this software, we offer a central, user-friendly solution that allows users
 ## Usage
 
 You can find an example of usage in this [notebook](https://github.com/ffe-munich/orthophotos-downloader/examples/demo_download.ipynb) in the examples folder
-You can find a test to download in any Bundesländer in [this script](https://github.com/ffe-munich/orthophotos-downloader/examples/download_test.py) in the examples folder
+You can find a test to download in any state (i.e. "Bundesland") inside [this script](https://github.com/ffe-munich/orthophotos-downloader/examples/download_test.py) in the examples folder
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
