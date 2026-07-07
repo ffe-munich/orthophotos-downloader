@@ -358,35 +358,6 @@ class HH_RGB_Dop20_ImageDownloader(ImageDownloader):
         super().__init__(wms=wms, grid_spacing=grid_spacing)
 
 
-class HH_CIR_Dop20_ImageDownloader(ImageDownloader):
-    """
-    A class for downloading images from the Hamburg DOP20 WMS service.
-    The WMS specifications are automatically set to the Hamburg DOP20 service.
-
-    Attributes:
-        grid_spacing: The grid spacing in meters for the image download.
-    """
-
-    def __init__(self, grid_spacing: int):
-        """
-        Initialize the HamburgDop20ImageDownloader.
-
-        Args:
-            grid_spacing: The grid spacing in meters for the image download.
-        """
-        # Define the parameters specific for the DOP20 WMS
-        wms = ExtendedWebMapService(
-            url="https://geodienste.hamburg.de/HH_WMS_DOP?language=ger&",
-            version="1.3.0",
-            resolution=0.2,
-            layer_name="CIR_DOP",
-            crs="EPSG:25832",
-            format="image/tiff",
-        )
-
-        super().__init__(wms=wms, grid_spacing=grid_spacing)
-
-
 class HE_RGB_Dop20_ImageDownloader(ImageDownloader):
     """
     A class for downloading images from the Hessen DOP20 WMS service.
