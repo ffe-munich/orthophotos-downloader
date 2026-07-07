@@ -118,6 +118,21 @@ def test_state_wms_download(state_info, output_path):
         assert rgb_count > 0, f"RGB download produced no images"
         print(f"   ✅ RGB: {rgb_count} images downloaded")
 
+        # additional test for Hamburg, which has a slightly different downloader, i.e. it has an
+        # additional leaves parameter (default=True) that needs to be tested with leaves=False as
+        # well
+        if state_name == "Hamburg":
+            rgb_downloader = rgb_class(grid_spacing=TILE_SIZE, leaves=False)
+            rgb_result = rgb_downloader.download_images_from_polygon(
+                area_name=state_name,
+                area_polygon=gdf_tile,
+                out_path=state_path,
+                filename_prefix="RGB",
+            )
+            rgb_count = len(rgb_result.images) if rgb_result else 0
+            assert rgb_count > 0, f"RGB download produced no images"
+            print(f"   ✅ RGB: {rgb_count} images downloaded")
+
     except AttributeError as e:
         if f"module '{wms_module.__name__}' has no attribute '{expected_rgb_cls}'" in str(e):
             print(f"   ⚠️  RGB downloader not implemented for {state_name}")
