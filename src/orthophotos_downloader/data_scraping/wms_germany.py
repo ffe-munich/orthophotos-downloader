@@ -324,12 +324,12 @@ class BHV_RGB_Dop20_ImageDownloader(ImageDownloader):
         super().__init__(wms=wms, grid_spacing=grid_spacing)
 
 
-# Hamburg publishes two different DOP20 WMS services: "belaubt" (with leaves)
-# and "unbelaubt" (without leaves). Use the `leaves` parameter to select which
-# service to use when creating the downloader.
 class HH_RGB_Dop20_ImageDownloader(ImageDownloader):
-    """
-    A class for downloading images from the Hamburg DOP20 WMS service.
+    """A class for downloading images from the Hamburg DOP20 WMS service.
+
+    Hamburg publishes two different DOP20 WMS services: "belaubt" (with leaves)
+    and "unbelaubt" (without leaves). Use the `leaves` parameter to select which
+    service to use when creating the downloader.
 
     Args:
         grid_spacing: The grid spacing in meters for the image download.
