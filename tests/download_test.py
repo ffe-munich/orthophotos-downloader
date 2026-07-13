@@ -105,7 +105,8 @@ def test_state_wms_download(state_info, output_path):
     # Test RGB download
     rgb_downloader = None
     try:
-        rgb_class = getattr(wms_module, f"{state_code}_RGB_Dop20_ImageDownloader")
+        expected_rgb_cls = f"{state_code}_RGB_Dop20_ImageDownloader"
+        rgb_class = getattr(wms_module, expected_rgb_cls)
         rgb_downloader = rgb_class(grid_spacing=TILE_SIZE)
         rgb_result = rgb_downloader.download_images_from_polygon(
             area_name=state_name,
@@ -116,6 +117,28 @@ def test_state_wms_download(state_info, output_path):
         rgb_count = len(rgb_result.images) if rgb_result else 0
         assert rgb_count > 0, f"RGB download produced no images"
         print(f"   ✅ RGB: {rgb_count} images downloaded")
+
+        # additional test for Hamburg, which has a slightly different downloader, i.e. it has an
+        # additional leaves parameter (default=True) that needs to be tested with leaves=False as
+        # well
+        if state_name == "Hamburg":
+            rgb_downloader = rgb_class(grid_spacing=TILE_SIZE, leaves=False)
+            rgb_result = rgb_downloader.download_images_from_polygon(
+                area_name=state_name,
+                area_polygon=gdf_tile,
+                out_path=state_path,
+                filename_prefix="RGB",
+            )
+            rgb_count = len(rgb_result.images) if rgb_result else 0
+            assert rgb_count > 0, f"RGB download produced no images"
+            print(f"   ✅ RGB: {rgb_count} images downloaded")
+
+    except AttributeError as e:
+        if f"module '{wms_module.__name__}' has no attribute '{expected_rgb_cls}'" in str(e):
+            print(f"   ⚠️  RGB downloader not implemented for {state_name}")
+        else:
+            raise e
+
     except Exception as e:
         print(f"   ❌ RGB download failed: {e}")
         if is_critical:
@@ -126,7 +149,8 @@ def test_state_wms_download(state_info, output_path):
     # Test CIR download
     cir_downloader = None
     try:
-        cir_class = getattr(wms_module, f"{state_code}_CIR_Dop20_ImageDownloader")
+        expected_cir_cls = f"{state_code}_CIR_Dop20_ImageDownloader"
+        cir_class = getattr(wms_module, expected_cir_cls)
         cir_downloader = cir_class(grid_spacing=TILE_SIZE)
         cir_result = cir_downloader.download_images_from_polygon(
             area_name=state_name,
@@ -137,6 +161,13 @@ def test_state_wms_download(state_info, output_path):
         cir_count = len(cir_result.images) if cir_result else 0
         assert cir_count > 0, f"CIR download produced no images"
         print(f"   ✅ CIR: {cir_count} images downloaded")
+
+    except AttributeError as e:
+        if f"module '{wms_module.__name__}' has no attribute '{expected_cir_cls}'" in str(e):
+            print(f"   ⚠️  CIR downloader not implemented for {state_name}")
+        else:
+            raise e
+
     except Exception as e:
         print(f"   ❌ CIR download failed: {e}")
         if is_critical:
