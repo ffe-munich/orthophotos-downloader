@@ -35,6 +35,7 @@
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
+    <li><a href="#sponsoring">Sponsoring</a></li>
   </ol>
 </details>
 
@@ -160,7 +161,22 @@ Don't forget to give the project a star! Thanks again!
 <!-- LICENSE -->
 ## License
 
-Distributed under Apache-2.0 license. See `LICENSE.txt` for more information.
+Distributed under the MIT License. See `LICENSE` for more information.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+<!-- SPONSORING -->
+## Sponsoring
+
+This project was developed with the support of the following research projects and organisations:
+
+<p align="center">
+  <img src=".github/assets/BMWE_gefoerdert_en_RGB.svg" alt="BMWE funded" height="240" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src=".github/assets/glowup-logo-zusatz-negativ.svg" alt="GLOW-Up" height="240" />
+</p>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

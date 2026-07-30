@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "orthophotos_downloader"
-version = "1.0.1"
-authors = [{name = "Daniel Godin", email = "contact@dangodin.com"},
+version = "1.0.2"
+authors = [{name = "Daniel Godin", email = "dgodin@ffe.de"},
            {name = "Joachim Ferstl", email = "jferstl@ffe.de"},]
 
 description = "Python wrapper for various available WMS services to simplify the download of orthophotos. Currently focused on Germany."
