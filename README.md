@@ -170,12 +170,12 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- SPONSORING -->
 ## Sponsoring
 
-This project was developed with the support of the following research projects and organisations:
+This project was developed with the support of the research project GLOW-Up. GLOW-Up is funded by the Federal Ministry for Economic Affairs and Energy (BMWE) as part of the 8th Energy Research Program.
 
 <p align="center">
-  <img src=".github/assets/BMWE_gefoerdert_en_RGB.svg" alt="BMWE funded" height="240" />
+  <img src="https://raw.githubusercontent.com/ffe-munich/orthophotos-downloader/main/.github/assets/glowup-logo-zusatz-negativ.svg" alt="GLOW-Up" height="240" />
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src=".github/assets/glowup-logo-zusatz-negativ.svg" alt="GLOW-Up" height="240" />
+  <img src="https://raw.githubusercontent.com/ffe-munich/orthophotos-downloader/main/.github/assets/BMWE_gefoerdert_en_RGB.svg" alt="BMWE funded" height="200" />
 </p>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
