@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "orthophotos_downloader"
-version = "1.0.1"
-authors = [{name = "Daniel Godin", email = "contact@dangodin.com"},
+version = "1.0.2"
+authors = [{name = "Daniel Godin", email = "dgodin@ffe.de"},
            {name = "Joachim Ferstl", email = "jferstl@ffe.de"},]
 
 description = "Python wrapper for various available WMS services to simplify the download of orthophotos. Currently focused on Germany."
@@ -13,6 +13,8 @@ keywords = ["aerial images", "orthophotos"]
 readme = "README.md"
 
 requires-python = ">=3.11"
+
+license = { text = "MIT License" }
 
 dependencies = [
     "geopandas>=1.0.0",
@@ -27,8 +29,7 @@ classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: GIS",
-    "License :: OSI Approved :: Apache Software License",
-
+    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
 ]

@@ -325,56 +325,32 @@ class BHV_RGB_Dop20_ImageDownloader(ImageDownloader):
 
 
 class HH_RGB_Dop20_ImageDownloader(ImageDownloader):
-    """
-    A class for downloading images from the Hamburg DOP20 WMS service.
-    The WMS specifications are automatically set to the Hamburg DOP20 service.
+    """A class for downloading images from the Hamburg DOP20 WMS service.
 
-    Attributes:
+    Hamburg publishes two different DOP20 WMS services: "belaubt" (with leaves)
+    and "unbelaubt" (without leaves). Use the `leaves` parameter to select which
+    service to use when creating the downloader.
+
+    Args:
         grid_spacing: The grid spacing in meters for the image download.
+        leaves: If True use the "belaubt" (with leaves) service, otherwise use
+            the "unbelaubt" (without leaves) service. Default: True.
     """
 
-    def __init__(self, grid_spacing: int):
-        """
-        Initialize the HamburgDop20ImageDownloader.
+    def __init__(self, grid_spacing: int, leaves: bool = True):
+        # choose service details based on leaves flag
+        if leaves:
+            url = "https://geodienste.hamburg.de/wms_dop_zeitreihe_belaubt?language=ger&"
+            layer = "dop_zeitreihe_belaubt"
+        else:
+            url = "https://geodienste.hamburg.de/wms_dop_zeitreihe_unbelaubt?language=ger&"
+            layer = "dop_zeitreihe_unbelaubt"
 
-        Args:
-            grid_spacing: The grid spacing in meters for the image download.
-        """
-        # Define the parameters specific for the DOP20 WMS
         wms = ExtendedWebMapService(
-            url="https://geodienste.hamburg.de/HH_WMS_DOP?language=ger&",
+            url=url,
             version="1.3.0",
             resolution=0.2,
-            layer_name="DOP",
-            crs="EPSG:25832",
-            format="image/tiff",
-        )
-
-        super().__init__(wms=wms, grid_spacing=grid_spacing)
-
-
-class HH_CIR_Dop20_ImageDownloader(ImageDownloader):
-    """
-    A class for downloading images from the Hamburg DOP20 WMS service.
-    The WMS specifications are automatically set to the Hamburg DOP20 service.
-
-    Attributes:
-        grid_spacing: The grid spacing in meters for the image download.
-    """
-
-    def __init__(self, grid_spacing: int):
-        """
-        Initialize the HamburgDop20ImageDownloader.
-
-        Args:
-            grid_spacing: The grid spacing in meters for the image download.
-        """
-        # Define the parameters specific for the DOP20 WMS
-        wms = ExtendedWebMapService(
-            url="https://geodienste.hamburg.de/HH_WMS_DOP?language=ger&",
-            version="1.3.0",
-            resolution=0.2,
-            layer_name="CIR_DOP",
+            layer_name=layer,
             crs="EPSG:25832",
             format="image/tiff",
         )
