@@ -168,6 +168,8 @@ class ExtendedWebMapService:
         layer_name: str,
         crs: str,
         format: str,
+        extra_params: Optional[dict[str, str]] = None,
+        max_tile_size_px: int = 2500,
     ):
         """
         Initialize the ExtendedWebMapService object.
@@ -179,6 +181,8 @@ class ExtendedWebMapService:
             layer_name: The name of the layer to download.
             crs: The coordinate reference system in EPSG format (e.g. 'EPSG:25832').
             format: The image format to download.
+            extra_params: Optional additional query parameters sent with every GetMap request.
+            max_tile_size_px: Maximum width/height in pixels per GetMap request.
         """
         self.wms: WebMapService_1_1_1 | WebMapService_1_3_0 = WebMapService(
             url=url, version=version
@@ -187,6 +191,8 @@ class ExtendedWebMapService:
         self.layer_name: str = layer_name
         self.crs: str = crs  # EPSG format
         self.format: str = format
+        self.extra_params: dict[str, str] = extra_params or {}
+        self.max_tile_size_px: int = max_tile_size_px
 
     def getmap(self, bbox, size) -> ResponseWrapper:
         """
@@ -205,6 +211,7 @@ class ExtendedWebMapService:
             bbox=bbox,
             size=size,
             format=self.format,
+            **self.extra_params,
         )
 
     def to_dict(self) -> dict:
@@ -404,6 +411,7 @@ class ImageDownloader:
                         height_px=self.height_px,
                         mask=mask,
                         driver=driver,
+                        max_tile_size_px=self.wms.max_tile_size_px,
                     )
                 )
                 logger.info(

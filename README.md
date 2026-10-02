@@ -124,7 +124,7 @@ See the [open issues](https://github.com/ffe-munich/orthophotos-downloader/issue
 | Niedersachsen          | ✅  |     |
 | Schleswig-Holstein     | ✅  |     |
 | Bayern                 | ✅  | ✅  |
-| Berlin                 | ✅  | ✅  |
+| Berlin                 | ✅  |     |
 | Baden-Württemberg      | ✅  | ✅  |
 
 

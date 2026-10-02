@@ -94,7 +94,7 @@ def test_state_wms_download(state_info, output_path):
         else:
             pytest.skip(f"No valid test tile found for {state_name}")
     
-    # Prepare geometry
+    # Prepare geometry in default UTM zone and reproject per downloader if needed.
     gdf_tile = gpd.GeoSeries([tile], crs="EPSG:25832")
     state_path = output_path / state_name.replace("/", "_")
     state_path.mkdir(exist_ok=True, parents=True)
@@ -108,30 +108,16 @@ def test_state_wms_download(state_info, output_path):
         expected_rgb_cls = f"{state_code}_RGB_Dop20_ImageDownloader"
         rgb_class = getattr(wms_module, expected_rgb_cls)
         rgb_downloader = rgb_class(grid_spacing=TILE_SIZE)
+        rgb_tile = gdf_tile.to_crs(rgb_downloader.wms.crs)
         rgb_result = rgb_downloader.download_images_from_polygon(
             area_name=state_name,
-            area_polygon=gdf_tile,
+            area_polygon=rgb_tile,
             out_path=state_path,
             filename_prefix="RGB",
         )
         rgb_count = len(rgb_result.images) if rgb_result else 0
         assert rgb_count > 0, f"RGB download produced no images"
         print(f"   ✅ RGB: {rgb_count} images downloaded")
-
-        # additional test for Hamburg, which has a slightly different downloader, i.e. it has an
-        # additional leaves parameter (default=True) that needs to be tested with leaves=False as
-        # well
-        if state_name == "Hamburg":
-            rgb_downloader = rgb_class(grid_spacing=TILE_SIZE, leaves=False)
-            rgb_result = rgb_downloader.download_images_from_polygon(
-                area_name=state_name,
-                area_polygon=gdf_tile,
-                out_path=state_path,
-                filename_prefix="RGB",
-            )
-            rgb_count = len(rgb_result.images) if rgb_result else 0
-            assert rgb_count > 0, f"RGB download produced no images"
-            print(f"   ✅ RGB: {rgb_count} images downloaded")
 
     except AttributeError as e:
         if f"module '{wms_module.__name__}' has no attribute '{expected_rgb_cls}'" in str(e):
@@ -152,9 +138,10 @@ def test_state_wms_download(state_info, output_path):
         expected_cir_cls = f"{state_code}_CIR_Dop20_ImageDownloader"
         cir_class = getattr(wms_module, expected_cir_cls)
         cir_downloader = cir_class(grid_spacing=TILE_SIZE)
+        cir_tile = gdf_tile.to_crs(cir_downloader.wms.crs)
         cir_result = cir_downloader.download_images_from_polygon(
             area_name=state_name,
-            area_polygon=gdf_tile,
+            area_polygon=cir_tile,
             out_path=state_path,
             filename_prefix="CIR",
         )
@@ -179,8 +166,9 @@ def test_state_wms_download(state_info, output_path):
     if rgb_downloader and cir_downloader:
         try:
             rgbi_downloader = RGBIImageDownloader(rgb_downloader, cir_downloader)
+            rgbi_tile = gdf_tile.to_crs(rgb_downloader.wms.crs)
             rgbi_result = rgbi_downloader.download_rgbi_images_from_polygon(
-                area_name=state_name, area_polygon=gdf_tile, out_path=state_path
+                area_name=state_name, area_polygon=rgbi_tile, out_path=state_path
             )
             rgbi_count = len(rgbi_result.images) if rgbi_result else 0
             print(f"   ✅ RGBI: {rgbi_count} images merged")

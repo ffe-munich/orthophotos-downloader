@@ -151,8 +151,8 @@ class BY_CIR_Dop20_ImageDownloader(ImageDownloader):
 
 class BE_RGB_Dop20_ImageDownloader(ImageDownloader):
     """
-    A class for downloading images from the Brandenburg DOP20 WMS service.
-    The WMS specifications are automatically set to the Brandenburg DOP20 service.
+    A class for downloading images from the Berlin DOP WMS service.
+    The WMS specifications are automatically set to the Berlin trueDOP service.
 
     Attributes:
         grid_spacing: The grid spacing in meters for the image download.
@@ -160,48 +160,19 @@ class BE_RGB_Dop20_ImageDownloader(ImageDownloader):
 
     def __init__(self, grid_spacing: int):
         """
-        Initialize the BrandenburgDop20ImageDownloader.
+        Initialize the BerlinDop20ImageDownloader.
 
         Args:
             grid_spacing: The grid spacing in meters for the image download.
         """
         # Define the parameters specific for the DOP20 WMS
         wms = ExtendedWebMapService(
-            url="https://isk.geobasis-bb.de/mapproxy/dop20c/service/wms",
+            url="https://gdi.berlin.de/services/wms/truedop_2026",
             version="1.3.0",
             resolution=0.2,
-            layer_name="bebb_dop20c",
-            crs="EPSG:25832",
-            format="image/png",
-        )
-
-        super().__init__(wms=wms, grid_spacing=grid_spacing)
-
-
-class BE_CIR_Dop20_ImageDownloader(ImageDownloader):
-    """
-    A class for downloading images from the Brandenburg DOP CIR 20 WMS service.
-    The WMS specifications are automatically set to the Brandenburg DOPCIR20 service.
-
-    Attributes:
-        grid_spacing: The grid spacing in meters for the image download.
-    """
-
-    def __init__(self, grid_spacing: int):
-        """
-        Initialize the BE_CIR_Dop20_ImageDownloader.
-
-        Args:
-            grid_spacing: The grid spacing in meters for the image download.
-        """
-        # Define the parameters specific for the DOP20 WMS
-        wms = ExtendedWebMapService(
-            url="https://isk.geobasis-bb.de/mapproxy/dop20cir/service/wms",
-            version="1.3.0",
-            resolution=0.2,
-            layer_name="bb_dop20cir",
-            crs="EPSG:25832",
-            format="image/png",
+            layer_name="truedop_2026",
+            crs="EPSG:25833",
+            format="image/geotiff",
         )
 
         super().__init__(wms=wms, grid_spacing=grid_spacing)
@@ -327,32 +298,20 @@ class BHV_RGB_Dop20_ImageDownloader(ImageDownloader):
 class HH_RGB_Dop20_ImageDownloader(ImageDownloader):
     """A class for downloading images from the Hamburg DOP20 WMS service.
 
-    Hamburg publishes two different DOP20 WMS services: "belaubt" (with leaves)
-    and "unbelaubt" (without leaves). Use the `leaves` parameter to select which
-    service to use when creating the downloader.
-
-    Args:
-        grid_spacing: The grid spacing in meters for the image download.
-        leaves: If True use the "belaubt" (with leaves) service, otherwise use
-            the "unbelaubt" (without leaves) service. Default: True.
+    The service is time-dimensioned, so the current production year is passed
+    explicitly to keep requests reproducible.
     """
 
-    def __init__(self, grid_spacing: int, leaves: bool = True):
-        # choose service details based on leaves flag
-        if leaves:
-            url = "https://geodienste.hamburg.de/wms_dop_zeitreihe_belaubt?language=ger&"
-            layer = "dop_zeitreihe_belaubt"
-        else:
-            url = "https://geodienste.hamburg.de/wms_dop_zeitreihe_unbelaubt?language=ger&"
-            layer = "dop_zeitreihe_unbelaubt"
-
+    def __init__(self, grid_spacing: int):
         wms = ExtendedWebMapService(
-            url=url,
+            url="https://geodienste.hamburg.de/wms_dop_zeitreihe_unbelaubt?language=ger&",
             version="1.3.0",
             resolution=0.2,
-            layer_name=layer,
+            layer_name="dop_zeitreihe_unbelaubt",
             crs="EPSG:25832",
             format="image/tiff",
+            extra_params={"time": "2026"},
+            max_tile_size_px=4096,
         )
 
         super().__init__(wms=wms, grid_spacing=grid_spacing)
